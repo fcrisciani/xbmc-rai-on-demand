@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.rai-on-demand" name="Rai.tv On Demand"
+	version="1.0" provider-name="fcrisciani">
+	<requires>
+		<import addon="xbmc.python" version="2.0" />
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="main.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Rai.tv On Demand</summary>
+		<summary lang="it">Rai.tv On Demand</summary>
+		<description lang="en">Rai is the italian public television broadcaster. It has an on demand service on www.rai.tv. All contents are available only for italian subscribers.</description>
+		<description lang="it">Questo plugin permette di vedere le trasmissioni on demand messe a disposizione dal sito Rai.tv. I contenuti sono basati sulle repliche e trasmissioni del palinsesto Rai. La visione dei contenuti è ammessa solo dall'Italia.</description>
+		<platform>all</platform>
+	</extension>
+</addon>
