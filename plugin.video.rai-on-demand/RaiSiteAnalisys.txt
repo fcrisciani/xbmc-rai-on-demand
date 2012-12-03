@@ -1,0 +1,79 @@
+#Rai.tv site analysis
+
+#STEP 1 Programs index:
+We define the program index as the service that returns the JSON with all the tv shows available on the site.
+From the analysis of the Rai.tv page and Javascript comes out that there is a single service that returns all the available
+tv shows as a JSON and then there is a conditional statements that on the base of the search key render the proper list.
+The URL of the service actually is: http://www.rai.tv/dl/RaiTV/programmi/ricerca/ContentSet-6445de64-d321-476c-a890-ae4ed32c729e-darivedere.html
+This URL has been found inside the javascript embedded in the page www.rai.tv and the rendering is done in the javascript method: 
+function applyElencoFilter(key,filter)
+
+The json is a list of elements like: 
+[date :"1346763990853"
+desc : ""
+editore : "RaiUno"
+image : "http://www.rai.tv/dl/images/1323430745767Skin_PortaAPorta.jpg"
+index : "p"
+integrale : "false"
+linkDemand : "/dl/RaiTV/programmi/page/Page-86e553b7-5d8c-4375-809c-1bf1c879c1c3.html"
+linkSite : ""
+nascosto : "false"
+onda : "Dal luned“ al gioved“ in seconda serata su Rai1"
+podAudio : "false"
+podVideo : "false"
+sottotitolato : "true"
+tematiche : ...
+title : "Porta a Porta"
+]
+
+What it is used in this case is the linkDemand that point to the specific page where can be found all the video streams
+
+#STEP 2 Video list:
+In this section we analyze how extract all full episode of the specific tv show.
+Starting from the linkDemand url: http://www.rai.tv/dl/RaiTV/programmi/page/Page-86e553b7-5d8c-4375-809c-1bf1c879c1c3.html
+The first step is to scrape the page and found the link to the complete episode that can be found using a simple RE that match this line:
+
+<li class="Video ">
+<a target="top" id="ContentSet-65bd1da9-f5da-4144-9588-5fd126606e15" href="#">Puntate integrali</a>
+</li>
+
+The id of this link indicates the key to ask the list of avaialble shows to another service
+
+#STEP 3 JSON list:
+Now we are ready to ask the full list of available episodes, we have the content and analyzing again the javascript we found that in the file
+commonFun.js there is the method function renderSet(urlJson, selector, num, paginationSelector) that shows which is the url of the JSON service.
+The work is almost done because it comes out simply that the url is like: 
+http://www.rai.tv/dl/RaiTV/programmi/json/liste/' + <ContentSet-....> + '-json-V-' + <Page number> + '.html
+As a result on the base of the ContentSet and the Page Number we are able to query each single list of video for each single video show.
+The result is a JSON where there is a list of video like this:
+[some common tags like number of pages, program image and other stuff]
+list:[
+author : ""
+b100 : "rtv_societa^rtv_portaporta_3_1_rect^300x100^"
+b250 : "rtv_societa^rtv_portaporta_medium_box^300x250^"
+bsp : "rtv_streaming_societa^rtv_streaming_portaporta^wmv^"
+date : "20/11/2012"
+desc : ""
+eventType : "Serie"
+from : "Porta a Porta 2012-2013"
+h264 : "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=fwRvajT9OVgeeqqEEqual"
+image : ""
+image_medium : ""
+itemId : "ContentItem-d7c2d0e4-3e00-42b2-b354-8903cbc6e306"
+length : ""
+m3u8 : "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=VDNgXPZOjlceeqqEEqual"
+mediaUri : "http://mediapolisvod.rai.it/relinker/relinkerServlet.htm?cont=fdhv92bLcuMeeqqEEqual"
+name : "Porta a Porta del 19/11/2012"
+tagcloud : ""
+type : "RaiTv Media Video Item"
+weblink : "http://www.rai.tv/dl/RaiTV/programmi/media/ContentItem-d7c2d0e4-3e00-42b2-b354-8903cbc6e306.html"
+], [ other tv episods]
+
+On the base of this it is possible to populate the list of video ready to be seen.
+
+Have Fun!
+
+
+
+
+ 
