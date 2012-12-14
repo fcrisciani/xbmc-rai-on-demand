@@ -5,6 +5,7 @@ Created on Nov 23, 2012
 '''
 
 import urllib,sys,request,xbmcWrapper,json
+import urllib2
 
 pluginId = 0
 
@@ -23,7 +24,7 @@ def addLetterIndex():
     global pluginId,base_url
     
     letterList = request.letterIndexReq()
-    
+    # Add a list of letter
     for letter in letterList:
         xbmcWrapper.addFolder(pluginId,1,letter,{'letter': letter})
     xbmcWrapper.endOfContent(pluginId)
@@ -31,23 +32,43 @@ def addLetterIndex():
 def addTvShowsByLetter(paramDict):
     ''' This methods create the list of shows starting with letter '''        
     showList = request.showsWithLetterReq(paramDict['letter'])   
-    
+    # Add the list of shows starting with the letter chosen
     for elem in showList:
-        xbmcWrapper.addFolder(pluginId,2,elem.get('title'),{'title': elem.get('title'), 'iconImage': elem.get('image'), 'linkDemand': elem.get('linkDemand'), 'page': str(0)})
+        xbmcWrapper.addFolder(pluginId,2,elem.get('title'),{'title': elem.get('title'), 'iconImage': elem.get('image'), 'linkDemand': elem.get('linkDemand')})
     xbmcWrapper.endOfContent(pluginId)    
         
-def addTvShowEpisodes(paramDict):
-    ''' This methods create the list of shows starting with letter '''  
-    # LinkDemand is an URL that passed as a parameter form the command line and had been escaped so need to be recovered
+def addTvShowsCategories(paramDict):
+    ''' This methods create the list of shows video categories ''' 
+    # LinkDemand is an URL that passed as a parameter form the command line and had been escaped so need to be recovered       
     url = urllib.unquote_plus(paramDict['linkDemand'])         
-    episodeList = request.showsEpisodeList(url, int(paramDict['page']))   
-    
+    categoryList = request.showVideoCategories(url)  
+    #Add the list of categories for the chosen show
+    for elem in categoryList:
+        xbmcWrapper.addFolder(pluginId,3,elem[1],{'title': paramDict['title'], 'categoryName': elem[1], 'contentSet-Id': elem[0], 'page': str(0)})
+    xbmcWrapper.endOfContent(pluginId)  
+
+def addTvShowsCategoryEpisodes(paramDict):
+    ''' This methods create the list of video available for the previously chosen show and category '''  
+    episodeList = request.showsEpisodeList(paramDict['contentSet-Id'], int(paramDict['page']))   
+    # Add the list of video for the specified category
     for elem in episodeList['list']:
-        xbmcWrapper.addVideoItem(pluginId, elem.get('name'), elem.get('h264'), elem.get('image'), elem.get('image_medium'))
+        video = elem.get('h264') 
+        
+        if video == None or len(video) < 1:
+            video = elem.get('wmv')
+        if video == None or len(video) < 1:
+            video = elem.get('mediaUri')
+        if video:
+            #req = urllib2.Request(video)
+            #req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11')
+            #response = urllib2.urlopen(req)
+            #video = response.geturl()
+            print '*********' + video
+            xbmcWrapper.addVideoItem(pluginId, elem.get('name'), video, 'http://www.rai.tv/'+elem.get('image'), 'http://www.rai.tv/'+str(elem.get('image_medium')))
     
     # Hanlde the next page indicator
     if int(paramDict['page'])+1 < int(episodeList['pages']):
-        xbmcWrapper.addFolder(pluginId,3,'Prossima Pagina',{'title': paramDict['title'], 'linkDemand': paramDict['linkDemand'], 'page': str(int(paramDict['page'])+1)})
+        xbmcWrapper.addFolder(pluginId,4,'Prossima Pagina',{'title': paramDict['title'], 'contentSet-Id': paramDict['contentSet-Id'], 'page': str(int(paramDict['page'])+1)})
     
     xbmcWrapper.endOfContent(pluginId)    
 
@@ -88,12 +109,17 @@ elif mode == 1:
     print "Create shows staring with " + paramsDict['letter']
     addTvShowsByLetter(paramsDict)
 
-# Mode = 2 - Tv show chosen - List of episode available for that show      
+# Mode = 2 - Tv show chosen - List of video categories available    
 elif mode == 2: 
-    print "Create episode index for: " + paramsDict['title'] + ' page: ' + str(paramsDict['page'])
-    addTvShowEpisodes(paramsDict)
-
-# Mode = 3 - Tv show chosen - List of episode available for that show for next pages    
+    print "Create video categories for: " + paramsDict['title']
+    addTvShowsCategories(paramsDict)
+    
+# Mode = 2 - Tv show chosen - List of episode available for that show      
 elif mode == 3: 
     print "Create episode index for: " + paramsDict['title'] + ' page: ' + str(paramsDict['page'])
-    addTvShowEpisodes(paramsDict)
+    addTvShowsCategoryEpisodes(paramsDict)
+
+# Mode = 3 - Tv show chosen - List of episode available for that show for next pages    
+elif mode == 4: 
+    print "Create episode index for: " + paramsDict['title'] + ' page: ' + str(paramsDict['page'])
+    addTvShowsCategoryEpisodes(paramsDict)
