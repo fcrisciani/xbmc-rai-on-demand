@@ -31,13 +31,14 @@ What it is used in this case is the linkDemand that point to the specific page w
 #STEP 2 Video list:
 In this section we analyze how extract all full episode of the specific tv show.
 Starting from the linkDemand url: http://www.rai.tv/dl/RaiTV/programmi/page/Page-86e553b7-5d8c-4375-809c-1bf1c879c1c3.html
-The first step is to scrape the page and found the link to the complete episode that can be found using a simple RE that match this line:
+The first step is to scrape the page and found the links first to categories and their ContentSet, then on the base of the category chosen the complete episode list.
 
+Example of a category and its ContentSet:
 <li class="Video ">
 <a target="top" id="ContentSet-65bd1da9-f5da-4144-9588-5fd126606e15" href="#">Puntate integrali</a>
 </li>
 
-The id of this link indicates the key to ask the list of avaialble shows to another service
+The id of this link indicates the key to ask the list of available shows to another service
 
 #STEP 3 JSON list:
 Now we are ready to ask the full list of available episodes, we have the content and analyzing again the javascript we found that in the file

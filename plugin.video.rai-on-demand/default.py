@@ -4,8 +4,7 @@ Created on Nov 23, 2012
 @author: flavio
 '''
 
-import urllib,sys,request,xbmcWrapper,json
-import urllib2
+import urllib,urllib2,sys,request,xbmcWrapper,json
 
 pluginId = 0
 
@@ -114,12 +113,12 @@ elif mode == 2:
     print "Create video categories for: " + paramsDict['title']
     addTvShowsCategories(paramsDict)
     
-# Mode = 2 - Tv show chosen - List of episode available for that show      
+# Mode = 3 - Tv show chosen - List of episode available for that show      
 elif mode == 3: 
     print "Create episode index for: " + paramsDict['title'] + ' page: ' + str(paramsDict['page'])
     addTvShowsCategoryEpisodes(paramsDict)
 
-# Mode = 3 - Tv show chosen - List of episode available for that show for next pages    
+# Mode = 4 - Tv show chosen - List of episode available for that show for next pages    
 elif mode == 4: 
     print "Create episode index for: " + paramsDict['title'] + ' page: ' + str(paramsDict['page'])
     addTvShowsCategoryEpisodes(paramsDict)
