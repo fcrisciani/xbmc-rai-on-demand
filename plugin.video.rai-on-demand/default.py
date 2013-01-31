@@ -4,7 +4,7 @@ Created on Nov 23, 2012
 @author: flavio
 '''
 
-import urllib,urllib2,sys,request,xbmcWrapper,json
+import urllib,urllib2,sys,request,xbmcWrapper,json,cache
 
 pluginId = 0
 
@@ -91,10 +91,10 @@ def getParams():
 paramsDict=getParams()
 mode=None
 try:
-        mode=int(paramsDict['mode'])
+    mode=int(paramsDict['mode'])
 except:
-        pass
-    
+    cache.clearFileCache()
+
 loggerMethod("Mode", str(mode))
 
 

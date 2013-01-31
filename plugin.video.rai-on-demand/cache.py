@@ -31,10 +31,16 @@ def getFileCache(name,freshnessSec):
 
 def saveFileCache(name,file):
     try:
-        os.remove(tempPath + name)
+        os.remove(tempPath + "XBMC_RAI_" + name)
     except:
         pass
-    f = open(tempPath + name,'w')
+    f = open(tempPath + "XBMC_RAI_" + name,'w')
     f.write(str(time.time())+'\n')
     f.write(file)
     f.close()
+
+def clearFileCache():
+    for f in os.listdir(tempPath):
+        if "XBMC_RAI_" in f:
+            os.remove(tempPath+f) 
+        
