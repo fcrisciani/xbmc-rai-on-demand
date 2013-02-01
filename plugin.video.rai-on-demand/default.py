@@ -11,10 +11,11 @@ pluginId = int(sys.argv[1])
 #addon id - name of addon directory
 _id='plugin.video.rai-on-demand'
 #resources directory
-_resdir = "special://home/addons/" + _id + "/resources" #add our library to python search path
-sys.path.append( _resdir + "/lib/")
+#_resdir = "special://home/addons/" + _id + "/resources" #add our library to python search path
+#sys.path.append( _resdir + "/lib/")
 
 def loggerMethod(top,log):
+    '''use for debug'''
     print '#############################'
     print top + '-' + log
 
@@ -23,6 +24,7 @@ def addLetterIndex():
     global pluginId,base_url
     
     letterList = request.letterIndexReq()
+
     # Add a list of letter
     for letter in letterList:
         xbmcWrapper.addFolder(pluginId,1,letter,{'letter': letter})
@@ -92,7 +94,11 @@ paramsDict=getParams()
 mode=None
 try:
     mode=int(paramsDict['mode'])
+except (TypeError, KeyError):
+    pass
 except:
+    print "********* GENERIC ERROR EXCEPTION TO BE VERIFIED *********"
+    print sys.exc_info()
     cache.clearFileCache()
 
 loggerMethod("Mode", str(mode))
