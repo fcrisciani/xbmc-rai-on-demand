@@ -6,7 +6,7 @@ Created on Nov 23, 2012
 
 import urllib,urllib2,sys,request,xbmcWrapper,json,cache
 
-pluginId = 0
+pluginId = int(sys.argv[1])
 
 #addon id - name of addon directory
 _id='plugin.video.rai-on-demand'
