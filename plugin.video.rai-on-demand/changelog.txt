@@ -1,2 +1,4 @@
 Version 1.0.0
-  First version of the plugin 
+  First version of the plugin
+Version 1.0.1
+  Solved annoying problem of reproduction failure due to xbmc timeout

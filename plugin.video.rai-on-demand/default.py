@@ -4,7 +4,7 @@ Created on Nov 23, 2012
 @author: flavio
 '''
 
-import urllib,urllib2,sys,request,xbmcWrapper,json,cache
+import urllib,urllib2,sys,request,xbmcWrapper,json,cache,xbmc,xbmcgui
 
 pluginId = int(sys.argv[1])
 
@@ -60,18 +60,26 @@ def addTvShowsCategoryEpisodes(paramDict):
         if video == None or len(video) < 1:
             video = elem.get('mediaUri')
         if video:
-            #req = urllib2.Request(video)
-            #req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11')
-            #response = urllib2.urlopen(req)
-            #video = response.geturl()
-            print '*********' + video
-            xbmcWrapper.addVideoItem(pluginId, elem.get('name'), video, 'http://www.rai.tv/'+elem.get('image'), 'http://www.rai.tv/'+str(elem.get('image_medium')))
+            xbmcWrapper.addVideoItemWithMode(pluginId, 5, elem.get('name'), video, 'http://www.rai.tv/'+elem.get('image'), 'http://www.rai.tv/'+str(elem.get('image_medium')))
     
     # Hanlde the next page indicator
     if int(paramDict['page'])+1 < int(episodeList['pages']):
         xbmcWrapper.addFolder(pluginId,4,'Prossima Pagina',{'title': paramDict['title'], 'contentSet-Id': paramDict['contentSet-Id'], 'page': str(int(paramDict['page'])+1)})
     
-    xbmcWrapper.endOfContent(pluginId)    
+    xbmcWrapper.endOfContent(pluginId)
+
+def getVideoUrlandPlay(paramDict):
+    ''' This methods get the video url following redirect and set it to play '''
+    req = urllib2.Request(urllib.unquote_plus(paramDict['videoUrl']))
+    req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11')
+    response = urllib2.urlopen(req)
+    video = response.geturl()
+    
+    videoInfo=xbmcgui.ListItem(urllib.unquote_plus(paramDict['title']), paramDict['iconImage'], paramDict['thumbnailImage'])
+    videoInfo.setInfo( type="Video", infoLabels={ "Title": urllib.unquote_plus(paramDict['title']) } )
+    # Play the video
+    xbmc.Player().play(video, videoInfo)
+    
 
 def getParams():
     ''' Utility method that returns all params passed to xbmc as a dictionary'''
@@ -102,7 +110,7 @@ except:
     cache.clearFileCache()
 
 loggerMethod("Mode", str(mode))
-
+print paramsDict
 
 # Mode = None - First start - List of letters
 if mode == None: 
@@ -128,3 +136,8 @@ elif mode == 3:
 elif mode == 4: 
     print "Create episode index for: " + paramsDict['title'] + ' page: ' + str(paramsDict['page'])
     addTvShowsCategoryEpisodes(paramsDict)
+
+# Mode = 5 - Video chosen - Follow redirects and get the last video url   
+elif mode == 5: 
+    print "Get video from url: " + paramsDict['videoUrl'] + ' and play'
+    getVideoUrlandPlay(paramsDict)

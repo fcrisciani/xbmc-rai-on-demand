@@ -3,10 +3,9 @@ Created on Nov 22, 2012
 
 @author: flavio
 '''
-import sys,xbmcplugin,xbmcgui
+import sys,xbmcplugin,xbmcgui,urllib
 
-def addFolder(pluginId, mode, name, paramDict):
-    
+def createModeUrl(mode, paramDict):
     urlParams = '?mode=' + str(mode)
     
     for dictItem in paramDict.items():
@@ -16,6 +15,11 @@ def addFolder(pluginId, mode, name, paramDict):
     #u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
     url = sys.argv[0] + urlParams
        
+    return url
+
+def addFolder(pluginId, mode, name, paramDict):
+    url = createModeUrl(mode,paramDict)
+
     iconImage="DefaultFolder.png"
     if 'iconImage' in paramDict:
         iconImage = paramDict['iconImage']
@@ -27,7 +31,13 @@ def addFolder(pluginId, mode, name, paramDict):
 def endOfContent(pluginId):
     xbmcplugin.endOfDirectory(pluginId)
 
-def addVideoItem(pluginId,name,url,iconImage,thumbnailImage):
+def addVideoItem(pluginId, name, videoUrl, iconImage, thumbnailImage):
     item=xbmcgui.ListItem(name, iconImage=str(iconImage), thumbnailImage=str(thumbnailImage))
     item.setInfo( type="Video", infoLabels={ "Title": name } )
-    xbmcplugin.addDirectoryItem(pluginId, url, item)
+    xbmcplugin.addDirectoryItem(pluginId, videoUrl, item)
+
+def addVideoItemWithMode(pluginId, mode, name, videoUrl, iconImage, thumbnailImage):
+    url = createModeUrl(mode, {'title': name, 'videoUrl': urllib.quote_plus(videoUrl), 'iconImage': str(iconImage), 'thumbnailImage':str(thumbnailImage)})
+    item = xbmcgui.ListItem(name, iconImage=str(iconImage), thumbnailImage=str(thumbnailImage))
+    item.setInfo( type="Video", infoLabels={ "Title": name } )
+    xbmcplugin.addDirectoryItem(pluginId, url, item, isFolder = True)

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
-<addon id='plugin.video.rai-on-demand' version='1.0.0' name='Rai.tv On Demand' provider-name='fcrisciani'>
+<addon id='plugin.video.rai-on-demand' version='1.0.1' name='Rai.tv On Demand' provider-name='fcrisciani'>
   <requires>
     <import addon='xbmc.python' version='2.0'/>
   </requires>
