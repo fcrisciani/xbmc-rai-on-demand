@@ -18,7 +18,7 @@ Manual way:
 - Step 2: Copy the folder "plugin.video.rai-on-demand" into the addons folder of xbmc (Note: each OS has its specific path)
 - Step 3: Restart xbmc and you will be able to see the addon under the video section
 
-Installation instructions [IT]
+Guida installazione [IT]
 =========================
 
 Installazione semplice:
