@@ -93,7 +93,7 @@ def getParams():
         for elem in paramList:
             token = elem.split('=')
             if len(token) == 2:
-                resultDict[token[0]] = token[1]
+                resultDict[token[0]] = urllib.unquote_plus(token[1])
     
     return resultDict
         

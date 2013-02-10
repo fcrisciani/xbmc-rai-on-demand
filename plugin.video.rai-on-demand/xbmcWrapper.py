@@ -9,7 +9,10 @@ def createModeUrl(mode, paramDict):
     urlParams = '?mode=' + str(mode)
     
     for dictItem in paramDict.items():
-        urlParams += '&' + dictItem[0] + '=' + dictItem[1]
+        try:
+            urlParams += '&' + dictItem[0] + '=' + urllib.quote_plus(dictItem[1])
+        except:
+            urlParams += '&' + dictItem[0] + '=' + dictItem[1]
         
     # url = "plugin://" + self._pluginName + "?url=" + item[1]
     #u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
