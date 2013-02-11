@@ -16,7 +16,7 @@ _id='plugin.video.rai-on-demand'
 
 def loggerMethod(top,log):
     '''use for debug'''
-    print '#############################'
+    print '############################## LOGGER ##############################'
     print top + '-' + log
 
 def addLetterIndex():
@@ -35,13 +35,13 @@ def addTvShowsByLetter(paramDict):
     showList = request.showsWithLetterReq(paramDict['letter'])   
     # Add the list of shows starting with the letter chosen
     for elem in showList:
-        xbmcWrapper.addFolder(pluginId,2,elem.get('title'),{'title': elem.get('title'), 'iconImage': elem.get('image'), 'linkDemand': elem.get('linkDemand')})
+        xbmcWrapper.addFolder(pluginId,2,elem.get('title'),{'title': elem.get('title'), 'image': elem.get('image'), 'linkDemand': elem.get('linkDemand')})
     xbmcWrapper.endOfContent(pluginId)    
         
 def addTvShowsCategories(paramDict):
     ''' This methods create the list of shows video categories ''' 
-    # LinkDemand is an URL that passed as a parameter form the command line and had been escaped so need to be recovered       
-    url = urllib.unquote_plus(paramDict['linkDemand'])         
+    # LinkDemand is an URL that contains category list of the specific tv show      
+    url = paramDict['linkDemand']         
     categoryList = request.showVideoCategories(url)  
     #Add the list of categories for the chosen show
     for elem in categoryList:
@@ -75,17 +75,15 @@ def getVideoUrlandPlay(paramDict):
     response = urllib2.urlopen(req)
     video = response.geturl()
     
+    print "VIDEO is: " + video
+
     videoInfo=xbmcgui.ListItem(urllib.unquote_plus(paramDict['title']), paramDict['iconImage'], paramDict['thumbnailImage'])
     videoInfo.setInfo( type="Video", infoLabels={ "Title": urllib.unquote_plus(paramDict['title']) } )
     # Play the video
-    xbmc.Player().play(video, videoInfo)
-    
+    xbmc.Player().play(video, videoInfo)    
 
 def getParams():
     ''' Utility method that returns all params passed to xbmc as a dictionary'''
-    print "ARGUMENTS: "
-    print sys.argv
-    
     resultDict = {}
     
     if len(sys.argv) > 1 and len(sys.argv[2]) > 1:
@@ -97,8 +95,15 @@ def getParams():
     
     return resultDict
         
-
+# New plugin call
+print '########################## NEW PLUGIN CALL ################################'
+print "ARGUMENTS: "
+print sys.argv
 paramsDict=getParams()
+print "PARAMS PARSED"
+print paramsDict
+print '############################################################################'
+
 mode=None
 try:
     mode=int(paramsDict['mode'])
@@ -109,8 +114,7 @@ except:
     print sys.exc_info()
     cache.clearFileCache()
 
-loggerMethod("Mode", str(mode))
-print paramsDict
+print 'MODE - ' + str(mode)
 
 # Mode = None - First start - List of letters
 if mode == None: 

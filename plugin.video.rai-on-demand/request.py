@@ -33,7 +33,8 @@ def showsWithLetterReq(letter):
     return filteredList
 
 def showVideoCategories(showUrl):
-    ''' Returns the list of video categories, with their contentSet, available for the show chosen'''
+    ''' Returns the list of video categories as tuple, with their contentSet, available for the show chosen'''
+    global base_url
     
     showPage = http.getPage(base_url + showUrl)
     
@@ -45,13 +46,10 @@ def showVideoCategories(showUrl):
         if category:
             result += category
 
-    print 'categories result list: ********'
-    print result
     return result
 
 def showsEpisodeList(contentId,page):
     ''' Returns the list of episodes of the chosen show'''
-    global base_url
     
     videoPage = cache.getFileCache(contentId + '-' + str(page) + '.txt', 56700)
     
