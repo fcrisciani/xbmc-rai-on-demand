@@ -70,7 +70,7 @@ def addTvShowsCategoryEpisodes(paramDict):
 
 def getVideoUrlandPlay(paramDict):
     ''' This methods get the video url following redirect and set it to play '''
-    req = urllib2.Request(urllib.unquote_plus(paramDict['videoUrl']))
+    req = urllib2.Request(paramDict['videoUrl'])
     req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11')
     response = urllib2.urlopen(req)
     video = response.geturl()

@@ -11,16 +11,16 @@ def createModeUrl(mode, paramDict):
     for dictItem in paramDict.items():
         param = ''
         try:
-            param = urllib.quote_plus(dictItem[1].encode('ascii', 'ignore'))
+            param = urllib.quote_plus(dictItem[1].encode('utf-8', 'ignore'))
         except:
-            param = dictItem[1].encode('ascii', 'ignore')
+            param = dictItem[1].encode('utf-8', 'ignore')
         urlParams += '&' + dictItem[0] + '=' + param
         
     # url = "plugin://" + self._pluginName + "?url=" + item[1]
     #u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
     url = sys.argv[0] + '?' + urlParams
 
-    print "xxxDEBUGxxx createModeUrl ---> Mode:" + str(mode) + " url: " + url
+    #print "xxxDEBUGxxx createModeUrl ---> Mode:" + str(mode) + " url: " + url
 
     return url
 
