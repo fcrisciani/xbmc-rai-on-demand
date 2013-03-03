@@ -9,11 +9,15 @@ def createModeUrl(mode, paramDict):
     urlParams = 'mode=' + str(mode)
     
     for dictItem in paramDict.items():
-        param = ''
         try:
-            param = urllib.quote_plus(dictItem[1].encode('utf-8', 'ignore'))
+            param = unicode(dictItem[1], errors='ignore')
         except:
-            param = dictItem[1].encode('utf-8', 'ignore')
+            param = dictItem[1]
+        
+        try:
+            param = urllib.quote_plus(param)
+        except:
+            pass
         urlParams += '&' + dictItem[0] + '=' + param
         
     # url = "plugin://" + self._pluginName + "?url=" + item[1]
